@@ -1,17 +1,23 @@
-//
-//  LaunchdMonitorAppApp.swift
-//  LaunchdMonitorApp
-//
-//  Created by macpro on 25/11/25.
-//
-
 import SwiftUI
 
 @main
-struct LaunchdMonitorAppApp: App {
+struct LaunchdMonitorApp: App {
+    // Create the shared controller
+    @StateObject private var controller = MonitorController()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(controller)
+                .frame(width: 90, height: 400) // initial compact width to show icons
+                .onAppear {
+                    controller.setupFloatingWindow() // set window level & position
+                    controller.startAutoRefresh()
+                }
+                .onDisappear {
+                    controller.stopAutoRefresh()
+                }
         }
+        .windowStyle(.hiddenTitleBar)
     }
 }
